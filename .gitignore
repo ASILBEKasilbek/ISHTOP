@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+*.env.*
+
+# Virtual environment
+env/
+venv/
+ENV/
+VENV/
+.venv/
+.ENV/
+
+# VS Code
+.vscode/
+
+# Pytest cache
+.pytest_cache/
+
+# Django
+*.log
+db.sqlite3
+/media/
+staticfiles/
+local_settings.py
+
+# Byte-compiled / optimized / DLL files
+*.so
+
+# Coverage reports
+htmlcov/
+.coverage
+coverage.xml
+*.cover
+
+# mypy
+.mypy_cache/
+
+# Pycharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini

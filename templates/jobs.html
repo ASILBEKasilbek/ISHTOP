@@ -2,18 +2,7 @@
 {% load crispy_forms_tags %}
 {% block title %}Ish uchun e’lonlar{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Ish qidiruvchi e’lon joylashtirish</h2>
-{% if user.is_authenticated %}
-    <form method="POST" enctype="multipart/form-data" class="space-y-4 bg-white p-6 rounded shadow">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="bg-black text-white p-2 rounded hover:bg-gray-800 transition">E’lonni yuborish</button>
-    </form>
-{% else %}
-    <p class="text-red-600">E’lon joylashtirish uchun <a href="{% url 'login' %}" class="text-blue-600 hover:underline">kiring</a> yoki <a href="{% url 'register' %}" class="text-blue-600 hover:underline">ro‘yxatdan o‘ting</a>.</p>
-{% endif %}
-
-<h3 class="text-xl font-bold mt-8 mb-4">E’lonlar ro‘yxati</h3>
+<h3 class="text-xl font-bold mb-4">E’lonlar ro‘yxati</h3>
 <form method="GET" class="mb-6 flex space-x-4">
     <select name="category" class="p-2 border rounded">
         <option value="">Kategoriya tanlang</option>
@@ -36,9 +25,13 @@
             <p>Ish haqi: {{ ad.salary_min }}-{{ ad.salary_max }} {{ ad.currency }}</p>
             <p>Ish turi: {{ ad.get_work_type_display }}</p>
             <p>Telefon: {{ ad.phone }}</p>
-            {% if ad.telegram %}<p><a href="{{ ad.telegram }}" class="text-blue-600 hover:underline">Telegram</a></p>{% endif %}
+            {% if ad.telegram %}
+                <p><a href="{{ ad.telegram }}" class="text-blue-600 hover:underline">Telegram</a></p>
+            {% endif %}
             <p>Tajriba: {{ ad.experience|truncatewords:20 }}</p>
-            {% if ad.cv %}<p><a href="{{ ad.cv.url }}" class="text-blue-600 hover:underline">CV yuklab olish</a></p>{% endif %}
+            {% if ad.cv %}
+                <p><a href="{{ ad.cv.url }}" class="text-blue-600 hover:underline">CV yuklab olish</a></p>
+            {% endif %}
             {% if ad.user == request.user %}
                 <div class="mt-4 flex space-x-2">
                     <a href="{% url 'edit_job_ad' ad.id %}" class="text-blue-600 hover:underline">Tahrirlash</a>
@@ -61,10 +54,15 @@
                 <span class="p-2 bg-black text-white rounded">{{ num }}</span>
             {% else %}
                 <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="p-2 bg-gray-200 rounded hover:bg-gray-300">{{ num }}</a>
-            {% endfor %}
+            {% endif %}
+        {% endfor %}
         {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="p-2 bg-gray-200 rounded hover:bg-gray-300">Keyingi</a>
         {% endif %}
     </div>
+{% endif %}
+
+{% if user.is_authenticated %}
+    <a href="{% url 'create_job_ad' %}" class="fixed bottom-4 right-4 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition">E’lon joylashtirish</a>
 {% endif %}
 {% endblock %}

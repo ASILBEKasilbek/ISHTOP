@@ -3,6 +3,7 @@
 }
 .navbar a:hover {
     transform: scale(1.1);
+    color: #10B981;
 }
 .card {
     transition: transform 0.2s;
@@ -10,4 +11,17 @@
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.fixed {
+    z-index: 1000;
+}
+.sticky-buttons {
+    display: flex;
+    gap: 1rem;
+}
+@media (max-width: 640px) {
+    .sticky-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
 }

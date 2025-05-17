@@ -3,38 +3,40 @@
 {% block title %}Ish beruvchilar{% endblock %}
 {% block content %}
 <h3 class="text-xl font-bold mb-4">E’lonlar ro‘yxati</h3>
-<form method="GET" class="mb-6 flex space-x-4">
+<form method="GET" class="mb-6 flex flex-wrap gap-4">
     <select name="category" class="p-2 border rounded">
         <option value="">Kategoriya tanlang</option>
         {% for value, label in form.fields.category.choices %}
-            <option value="{{ value }}" {% if request.GET.category == value %}selected{% endif %}>{{ label }}</option>
+            <option value="{{ value }}" {% if request.GET.category == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
         {% endfor %}
     </select>
-    <input type="number" name="salary_min" placeholder="Min ish haqi" value="{{ request.GET.salary_min }}" class="p-2 border rounded">
-    <input type="text" name="location" placeholder="Joylashuv" value="{{ request.GET.location }}" class="p-2 border rounded">
-    <button type="submit" class="bg-black text-white p-2 rounded hover:bg-gray-800">Filtrlash</button>
+    <input type="number" name="salary_min" placeholder="Min ish haqi" value="{{ request.GET.salary_min|default_if_none:'' }}" class="p-2 border rounded">
+    <input type="text" name="location" placeholder="Joylashuv" value="{{ request.GET.location|default_if_none:'' }}" class="p-2 border rounded">
+    <button type="submit" class="bg-black text-white p-2 rounded hover:bg-gray-800 transition">Filtrlash</button>
 </form>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for ad in page_obj %}
-        <div class="card bg-white p-6 rounded shadow">
-            <h4 class="font-bold text-lg">
-                <a href="{% url 'employer_ad_detail' ad.id %}" class="text-blue-600 hover:underline">{{ ad.company_name }} - {{ ad.position }}</a>
+        <div class="card bg-white p-6 rounded shadow hover:shadow-lg transition">
+            <h4 class="font-bold text-lg mb-1">
+                <a href="{% url 'employer_ad_detail' ad.id %}" class="text-blue-600 hover:underline">
+                    {{ ad.company_name }} - {{ ad.position }}
+                </a>
             </h4>
-            <p>Kategoriya: {{ ad.get_category_display }}</p>
-            <p>Joylashuv: {{ ad.location|default:"Noma'lum" }}</p>
-            <p>Ish haqi: {{ ad.salary_min }}-{{ ad.salary_max }} {{ ad.currency }}</p>
-            <p>Ish turi: {{ ad.get_work_type_display }}</p>
-            <p>Telefon: {{ ad.phone }}</p>
+            <p><strong>Kategoriya:</strong> {{ ad.get_category_display }}</p>
+            <p><strong>Joylashuv:</strong> {{ ad.location|default:"Noma'lum" }}</p>
+            <p><strong>Ish haqi:</strong> {{ ad.salary_min }} - {{ ad.salary_max }} {{ ad.currency }}</p>
+            <p><strong>Ish turi:</strong> {{ ad.get_work_type_display }}</p>
+            <p><strong>Telefon:</strong> {{ ad.phone }}</p>
             {% if ad.telegram %}
-                <p><a href="{{ ad.telegram }}" class="text-blue-600 hover:underline">Telegram</a></p>
+                <p><a href="{{ ad.telegram }}" class="text-blue-600 hover:underline" target="_blank" rel="noopener">Telegram</a></p>
             {% endif %}
             {% if ad.logo %}
-                <img src="{{ ad.logo.url }}" alt="Logo" class="h-16 mt-2 rounded">
+                <img src="{{ ad.logo.url }}" alt="Logo" class="h-16 mt-2 rounded object-contain">
             {% endif %}
-            <p>Talablar: {{ ad.requirements|truncatewords:20 }}</p>
+            <p><strong>Talablar:</strong> {{ ad.requirements|truncatewords:20 }}</p>
             {% if ad.user == request.user %}
-                <div class="mt-4 flex space-x-2">
+                <div class="mt-4 flex space-x-4">
                     <a href="{% url 'edit_employer_ad' ad.id %}" class="text-blue-600 hover:underline">Tahrirlash</a>
                     <a href="{% url 'delete_employer_ad' ad.id %}" class="text-red-600 hover:underline" onclick="return confirm('O‘chirishni tasdiqlaysizmi?')">O‘chirish</a>
                 </div>
@@ -46,11 +48,11 @@
 </div>
 
 {% if page_obj.has_other_pages %}
-    <div class="mt-6 flex justify-center space-x-2">
+    <div class="mt-6 flex justify-center space-x-2 flex-wrap">
         {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="p-2 bg-gray-200 rounded hover:bg-gray-300">Oldingi</a>
         {% endif %}
-          {% for num in page_obj.paginator.page_range %}
+        {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
                 <span class="p-2 bg-black text-white rounded">{{ num }}</span>
             {% else %}
@@ -65,6 +67,6 @@
 {% endif %}
 
 {% if user.is_authenticated %}
-    <a href="{% url 'create_employer_ad' %}" class="fixed bottom-4 right-4 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition">E’lon joylashtirish</a>
+    <a href="{% url 'create_employer_ad' %}" class="fixed bottom-4 right-4 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition" title="E’lon joylashtirish">+</a>
 {% endif %}
 {% endblock %}

@@ -1,10 +1,19 @@
 {% extends 'base.html' %}
 {% block title %}Foydali havolalar{% endblock %}
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Foydali havolalar</h2>
-<ul class="space-y-2">
-    <li><a href="https://t.me/ishtop" class="text-blue-600 hover:underline">Telegram</a></li>
-    <li><a href="https://instagram.com/ishtop" class="text-blue-600 hover:underline">Instagram</a></li>
-    <li><a href="https://tiktok.com/@ishtop" class="text-blue-600 hover:underline">TikTok</a></li>
-</ul>
+<h2 class="text-3xl font-extrabold mb-6 text-center text-indigo-700">Foydali havolalar</h2>
+<div class="max-w-md mx-auto space-y-4">
+    <a href="https://t.me/ishtop" target="_blank" class="flex items-center space-x-4 p-4 bg-indigo-50 rounded-lg shadow-md hover:bg-indigo-100 transition">
+        <img src="https://cdn-icons-png.flaticon.com/48/2111/2111646.png" alt="Telegram" class="w-8 h-8">
+        <span class="text-indigo-700 font-semibold text-lg">Telegram</span>
+    </a>
+    <a href="https://instagram.com/ishtop" target="_blank" class="flex items-center space-x-4 p-4 bg-pink-50 rounded-lg shadow-md hover:bg-pink-100 transition">
+        <img src="https://cdn-icons-png.flaticon.com/48/2111/2111463.png" alt="Instagram" class="w-8 h-8">
+        <span class="text-pink-600 font-semibold text-lg">Instagram</span>
+    </a>
+    <a href="https://tiktok.com/@ishtop" target="_blank" class="flex items-center space-x-4 p-4 bg-black rounded-lg shadow-md hover:bg-gray-900 transition">
+        <img src="https://cdn-icons-png.flaticon.com/48/3046/3046127.png" alt="TikTok" class="w-8 h-8">
+        <span class="text-white font-semibold text-lg">TikTok</span>
+    </a>
+</div>
 {% endblock %}

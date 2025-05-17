@@ -36,8 +36,7 @@ def login_view(request):
 
 @login_required
 def employers(request):
-    form = EmployerAdForm()
-    ads = EmployerAd.objects.all()
+    ads = EmployerAd.objects.all().order_by('-created_at')
 
     # Filtrlash
     category = request.GET.get('category')
@@ -55,6 +54,10 @@ def employers(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    return render(request, 'employers.html', {'page_obj': page_obj})
+
+@login_required
+def create_employer_ad(request):
     if request.method == 'POST':
         form = EmployerAdForm(request.POST, request.FILES)
         if form.is_valid():
@@ -63,8 +66,15 @@ def employers(request):
             ad.save()
             messages.success(request, "E’lon muvaffaqiyatli joylashtirildi!")
             return redirect('employers')
+    else:
+        form = EmployerAdForm()
+    return render(request, 'create_employer_ad.html', {'form': form})
 
-    return render(request, 'employers.html', {'form': form, 'page_obj': page_obj})
+@login_required
+def employer_ad_detail(request, ad_id):
+    ad = get_object_or_404(EmployerAd, id=ad_id)
+    print(ad)
+    return render(request, 'employer_ad_detail.html', {'ad': ad})
 
 @login_required
 def edit_employer_ad(request, ad_id):
@@ -77,7 +87,7 @@ def edit_employer_ad(request, ad_id):
             return redirect('employers')
     else:
         form = EmployerAdForm(instance=ad)
-    return render(request, 'employers.html', {'form': form, 'page_obj': EmployerAd.objects.all()})
+    return render(request, 'create_employer_ad.html', {'form': form})
 
 @login_required
 def delete_employer_ad(request, ad_id):
@@ -88,8 +98,7 @@ def delete_employer_ad(request, ad_id):
 
 @login_required
 def jobs(request):
-    form = JobAdForm()
-    ads = JobAd.objects.all()
+    ads = JobAd.objects.all().order_by('-created_at')
 
     # Filtrlash
     category = request.GET.get('category')
@@ -107,6 +116,10 @@ def jobs(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    return render(request, 'jobs.html', {'page_obj': page_obj})
+
+@login_required
+def create_job_ad(request):
     if request.method == 'POST':
         form = JobAdForm(request.POST, request.FILES)
         if form.is_valid():
@@ -115,8 +128,14 @@ def jobs(request):
             ad.save()
             messages.success(request, "E’lon muvaffaqiyatli joylashtirildi!")
             return redirect('jobs')
+    else:
+        form = JobAdForm()
+    return render(request, 'create_job_ad.html', {'form': form})
 
-    return render(request, 'jobs.html', {'form': form, 'page_obj': page_obj})
+@login_required
+def job_ad_detail(request, ad_id):
+    ad = get_object_or_404(JobAd, id=ad_id)
+    return render(request, 'job_ad_detail.html', {'ad': ad})
 
 @login_required
 def edit_job_ad(request, ad_id):
@@ -129,7 +148,7 @@ def edit_job_ad(request, ad_id):
             return redirect('jobs')
     else:
         form = JobAdForm(instance=ad)
-    return render(request, 'jobs.html', {'form': form, 'page_obj': JobAd.objects.all()})
+    return render(request, 'create_job_ad.html', {'form': form})
 
 @login_required
 def delete_job_ad(request, ad_id):
@@ -143,6 +162,6 @@ def links(request):
 
 @login_required
 def profile(request):
-    employer_ads = EmployerAd.objects.filter(user=request.user)
-    job_ads = JobAd.objects.filter(user=request.user)
+    employer_ads = EmployerAd.objects.filter(user=request.user).order_by('-created_at')
+    job_ads = JobAd.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'profile.html', {'employer_ads': employer_ads, 'job_ads': job_ads})

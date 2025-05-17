@@ -37,6 +37,7 @@ def login_view(request):
 @login_required
 def employers(request):
     ads = EmployerAd.objects.all().order_by('-created_at')
+    form = EmployerAdForm()  # Filtr uchun forma
 
     # Filtrlash
     category = request.GET.get('category')
@@ -54,7 +55,7 @@ def employers(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'employers.html', {'page_obj': page_obj})
+    return render(request, 'employers.html', {'page_obj': page_obj, 'form': form})
 
 @login_required
 def create_employer_ad(request):
@@ -73,7 +74,6 @@ def create_employer_ad(request):
 @login_required
 def employer_ad_detail(request, ad_id):
     ad = get_object_or_404(EmployerAd, id=ad_id)
-    print(ad)
     return render(request, 'employer_ad_detail.html', {'ad': ad})
 
 @login_required
@@ -99,6 +99,7 @@ def delete_employer_ad(request, ad_id):
 @login_required
 def jobs(request):
     ads = JobAd.objects.all().order_by('-created_at')
+    form = JobAdForm()  # Filtr uchun forma
 
     # Filtrlash
     category = request.GET.get('category')
@@ -116,7 +117,7 @@ def jobs(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'jobs.html', {'page_obj': page_obj})
+    return render(request, 'jobs.html', {'page_obj': page_obj, 'form': form})
 
 @login_required
 def create_job_ad(request):

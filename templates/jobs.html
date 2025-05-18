@@ -1,71 +1,86 @@
 {% extends 'base.html' %}
 {% block title %}Ish uchun e’lonlar{% endblock %}
 {% block content %}
-<h3 class="text-xl font-bold mb-4">E’lonlar ro‘yxati</h3>
-<form method="GET" class="mb-6 flex flex-wrap gap-4">
-    <select name="category" class="p-2 border rounded">
-        <option value="">Kategoriya tanlang</option>
-        {% for value, label in form.fields.category.choices %}
-            <option value="{{ value }}" {% if request.GET.category == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
-        {% endfor %}
-    </select>
-    <input type="number" name="salary_min" placeholder="Min ish haqi" value="{{ request.GET.salary_min|default_if_none:'' }}" class="p-2 border rounded">
-    <input type="text" name="location" placeholder="Joylashuv" value="{{ request.GET.location|default_if_none:'' }}" class="p-2 border rounded">
-    <button type="submit" class="bg-black text-white p-2 rounded hover:bg-gray-800 transition">Filtrlash</button>
-</form>
+<!-- Background image -->
+<div class="min-h-screen bg-cover bg-center" style="background-image: url('/static/images/bg.jpg');">
+    <div class="backdrop-blur-sm bg-black/40 min-h-screen py-10 px-4">
+        <div class="max-w-6xl mx-auto text-white">
+            <h3 class="text-4xl font-extrabold mb-8 border-b border-white/30 pb-2">E’lonlar ro‘yxati</h3>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for ad in page_obj %}
-        <div class="card bg-white p-6 rounded shadow hover:shadow-lg transition">
-            <h4 class="font-bold text-lg mb-1">
-                <a href="{% url 'job_ad_detail' ad.id %}" class="text-blue-600 hover:underline">
-                    {{ ad.full_name }} - {{ ad.desired_position }}
-                </a>
-            </h4>
-            <p><strong>Yosh:</strong> {{ ad.age }}</p>
-            <p><strong>Kategoriya:</strong> {{ ad.get_category_display }}</p>
-            <p><strong>Joylashuv:</strong> {{ ad.location|default:"Noma'lum" }}</p>
-            <p><strong>Ish haqi:</strong> {{ ad.salary_min }} - {{ ad.salary_max }} {{ ad.currency }}</p>
-            <p><strong>Ish turi:</strong> {{ ad.get_work_type_display }}</p>
-            <p><strong>Telefon:</strong> {{ ad.phone }}</p>
-            {% if ad.telegram %}
-                <p><strong>Telegram:</strong> <a href="{{ ad.telegram }}" class="text-blue-600 hover:underline" target="_blank" rel="noopener">{{ ad.telegram }}</a></p>
-            {% endif %}
-            <p><strong>Tajriba:</strong> {{ ad.experience|truncatewords:20 }}</p>
-            {% if ad.cv %}
-                <p><strong>CV:</strong> <a href="{{ ad.cv.url }}" class="text-blue-600 hover:underline">Yuklab olish</a></p>
-            {% endif %}
-            {% if ad.user == request.user %}
-                <div class="mt-4 flex space-x-4">
-                    <a href="{% url 'edit_job_ad' ad.id %}" class="text-blue-600 hover:underline">Tahrirlash</a>
-                    <a href="{% url 'delete_job_ad' ad.id %}" class="text-red-600 hover:underline" onclick="return confirm('O‘chirishni tasdiqlaysizmi?')">O‘chirish</a>
+            <!-- Filter Form -->
+            <form method="GET" class="mb-10 bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg border border-white/20 flex flex-wrap gap-4">
+                <select name="category" class="p-3 bg-white/20 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-blue-500/50">
+                    <option value="" class="bg-black/80">Kategoriya tanlang</option>
+                    {% for value, label in form.fields.category.choices %}
+                        <option value="{{ value }}" {% if request.GET.category == value|stringformat:"s" %}selected{% endif %} class="bg-black/80">{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="salary_min" placeholder="Min ish haqi" value="{{ request.GET.salary_min|default_if_none:'' }}" class="p-3 bg-white/20 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-blue-500/50 placeholder-gray-400">
+                <input type="text" name="location" placeholder="Joylashuv" value="{{ request.GET.location|default_if_none:'' }}" class="p-3 bg-white/20 border border-white/20 text-white rounded-lg focus:ring-2 focus:ring-blue-500/50 placeholder-gray-400">
+                <button type="submit" class="px-4 py-2 bg-blue-500/30 text-blue-100 rounded-lg hover:bg-blue-500/50 transition duration-200">Filtrlash</button>
+            </form>
+
+            <!-- Job Ads Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for ad in page_obj %}
+                    <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl shadow-md border border-white/20 hover:scale-105 transition-transform duration-200">
+                        <h4 class="text-xl font-bold text-green-200 mb-2">
+                            <a href="{% url 'job_ad_detail' ad.id %}" class="hover:underline">
+                                {{ ad.full_name }} - {{ ad.desired_position }}
+                            </a>
+                        </h4>
+                        <p class="text-gray-100"><strong>👤 Yosh:</strong> {{ ad.age }}</p>
+                        <p class="text-gray-100"><strong>📋 Kategoriya:</strong> {{ ad.get_category_display }}</p>
+                        <p class="text-gray-100"><strong>📍 Joylashuv:</strong> {{ ad.location|default:"Noma'lum" }}</p>
+                        <p class="text-gray-100"><strong>💰 Ish haqi:</strong> {{ ad.salary_min }} - {{ ad.salary_max }} {{ ad.currency }}</p>
+                        <p class="text-gray-100"><strong>💼 Ish turi:</strong> {{ ad.get_work_type_display }}</p>
+                        <p class="text-gray-100"><strong>📞 Telefon:</strong> {{ ad.phone }}</p>
+                        {% if ad.telegram %}
+                            <p class="text-gray-100"><strong>📱 Telegram:</strong> <a href="{{ ad.telegram }}" class="text-blue-200 hover:underline" target="_blank" rel="noopener">{{ ad.telegram }}</a></p>
+                        {% endif %}
+                        <p class="text-gray-100"><strong>🛠 Tajriba:</strong> {{ ad.experience|truncatewords:20 }}</p>
+                        {% if ad.cv %}
+                            <p class="text-gray-100"><strong>📄 CV:</strong> <a href="{{ ad.cv.url }}" class="text-blue-200 hover:underline">Yuklab olish</a></p>
+                        {% endif %}
+                        {% if ad.user == request.user %}
+                            <div class="mt-4 flex space-x-4">
+                                <a href="{% url 'edit_job_ad' ad.id %}" class="px-3 py-1 bg-blue-500/30 text-blue-100 rounded hover:bg-blue-500/50">✏️ Tahrirlash</a>
+                                <a href="{% url 'delete_job_ad' ad.id %}" class="px-3 py-1 bg-red-500/30 text-red-100 rounded hover:bg-red-500/50" onclick="return confirm('O‘chirishni tasdiqlaysizmi?')">🗑 O‘chirish</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="text-gray-200 text-center col-span-full">Hozircha e’lonlar yo‘q.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+                <div class="mt-10 flex justify-center space-x-2 flex-wrap">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="px-3 py-1 bg-blue-500/30 text-blue-100 rounded hover:bg-blue-500/50 transition duration-200">Oldingi</a>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <span class="px-3 py-1 bg-blue-500/50 text-white rounded">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="px-3 py-1 bg-blue-500/30 text-blue-100 rounded hover:bg-blue-500/50 transition duration-200">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="px-3 py-1 bg-blue-500/30 text-blue-100 rounded hover:bg-blue-500/50 transition duration-200">Keyingi</a>
+                    {% endif %}
                 </div>
             {% endif %}
-        </div>
-    {% empty %}
-        <p>Hozircha e’lonlar yo‘q.</p>
-    {% endfor %}
-</div>
 
-{% if page_obj.has_other_pages %}
-    <div class="mt-6 flex justify-center space-x-2 flex-wrap">
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="p-2 bg-gray-200 rounded hover:bg-gray-300">Oldingi</a>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <span class="p-2 bg-black text-white rounded">{{ num }}</span>
-            {% else %}
-                <a href="?page={{ num }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="p-2 bg-gray-200 rounded hover:bg-gray-300">{{ num }}</a>
+            <!-- Floating Action Button -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'create_job_ad' %}" class="fixed bottom-6 right-6 bg-blue-500/30 text-blue-100 px-4 py-2 rounded-full shadow-lg hover:bg-blue-500/50 transition duration-200 transform hover:scale-105" title="E’lon joylashtirish" aria-label="E’lon joylashtirish">
+                    E’lon joylashtirish
+                </a>
             {% endif %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.salary_min %}&salary_min={{ request.GET.salary_min }}{% endif %}{% if request.GET.location %}&location={{ request.GET.location }}{% endif %}" class="p-2 bg-gray-200 rounded hover:bg-gray-300">Keyingi</a>
-        {% endif %}
-    </div>
-{% endif %}
 
-{% if user.is_authenticated %}
-    <a href="{% url 'create_job_ad' %}" class="fixed bottom-4 right-4 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition" title="E’lon joylashtirish">E'lon joylashtirish</a>
-{% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

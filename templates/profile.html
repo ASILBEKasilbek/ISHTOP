@@ -1,44 +1,66 @@
 {% extends 'base.html' %}
 {% block title %}Profil{% endblock %}
+
 {% block content %}
-<h2 class="text-2xl font-bold mb-4">Foydalanuvchi profili</h2>
-{% if user.is_authenticated %}
-    <div class="space-y-4 bg-white p-6 rounded shadow">
-        <p><strong>Ism:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-    </div>
-    <h3 class="text-xl font-bold mt-8 mb-4">Sizning e’lonlaringiz</h3>
-    <h4 class="text-lg font-bold mb-2">Ish beruvchi e’lonlari</h4>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for ad in employer_ads %}
-            <div class="card bg-white p-6 rounded shadow">
-                <h4 class="font-bold text-lg">{{ ad.company_name }} - {{ ad.position }}</h4>
-                <p>Ish haqi: {{ ad.salary_min }}-{{ ad.salary_max }} {{ ad.currency }}</p>
-                <div class="mt-4 flex space-x-2">
-                    <a href="{% url 'edit_employer_ad' ad.id %}" class="text-blue-600 hover:underline">Tahrirlash</a>
-                    <a href="{% url 'delete_employer_ad' ad.id %}" class="text-red-600 hover:underline" onclick="return confirm('O‘chirishni tasdiqlaysizmi?')">O‘chirish</a>
+<!-- Fon rasmi -->
+<div class="min-h-screen bg-cover bg-center" style="background-image: url('/static/images/bg.jpg');">
+    <div class="backdrop-blur-sm bg-black/40 min-h-screen py-10 px-4">
+        <div class="max-w-6xl mx-auto text-white">
+            <h2 class="text-4xl font-extrabold mb-8 border-b border-white/30 pb-2">Foydalanuvchi profili</h2>
+
+            {% if user.is_authenticated %}
+                <!-- Foydalanuvchi ma'lumotlari -->
+                <div class="bg-white/10 backdrop-blur-md p-6 rounded-xl shadow-lg mb-10 border border-white/20">
+                    <p class="text-lg"><strong>👤 Ism:</strong> {{ user.username }}</p>
+                    <p class="text-lg mt-2"><strong>📧 Email:</strong> {{ user.email }}</p>
                 </div>
-            </div>
-        {% empty %}
-            <p>Ish beruvchi e’lonlari yo‘q.</p>
-        {% endfor %}
-    </div>
-    <h4 class="text-lg font-bold mt-6 mb-2">Ish qidiruvchi e’lonlari</h4>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for ad in job_ads %}
-            <div class="card bg-white p-6 rounded shadow">
-                <h4 class="font-bold text-lg">{{ ad.full_name }} - {{ ad.desired_position }}</h4>
-                <p>Ish haqi: {{ ad.salary_min }}-{{ ad.salary_max }} {{ ad.currency }}</p>
-                <div class="mt-4 flex space-x-2">
-                    <a href="{% url 'edit_job_ad' ad.id %}" class="text-blue-600 hover:underline">Tahrirlash</a>
-                    <a href="{% url 'delete_job_ad' ad.id %}" class="text-red-600 hover:underline" onclick="return confirm('O‘chirishni tasdiqlaysizmi?')">O‘chirish</a>
+
+                <!-- E'lonlar -->
+                <div class="space-y-12">
+                    <!-- Ish beruvchi e’lonlari -->
+                    <div>
+                        <h3 class="text-2xl font-semibold text-white mb-4">💼 Ish beruvchi e’lonlari</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {% for ad in employer_ads %}
+                                <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl shadow-md border border-white/20 hover:scale-105 transition-transform duration-200">
+                                    <h4 class="text-xl font-bold text-indigo-200">{{ ad.company_name }} - {{ ad.position }}</h4>
+                                    <p class="mt-2 text-gray-100">💰 Ish haqi: {{ ad.salary_min }} - {{ ad.salary_max }} {{ ad.currency }}</p>
+                                    <div class="mt-4 flex space-x-4">
+                                        <a href="{% url 'edit_employer_ad' ad.id %}" class="px-3 py-1 bg-blue-500/30 text-blue-100 rounded hover:bg-blue-500/50">✏️ Tahrirlash</a>
+                                        <a href="{% url 'delete_employer_ad' ad.id %}" class="px-3 py-1 bg-red-500/30 text-red-100 rounded hover:bg-red-500/50" onclick="return confirm('O‘chirishni tasdiqlaysizmi?')">🗑 O‘chirish</a>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-gray-200">Ish beruvchi e’lonlari yo‘q.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Ish qidiruvchi e’lonlari -->
+                    <div>
+                        <h3 class="text-2xl font-semibold text-white mb-4">🔍 Ish qidiruvchi e’lonlari</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {% for ad in job_ads %}
+                                <div class="bg-white/10 backdrop-blur-md p-5 rounded-xl shadow-md border border-white/20 hover:scale-105 transition-transform duration-200">
+                                    <h4 class="text-xl font-bold text-green-200">{{ ad.full_name }} - {{ ad.desired_position }}</h4>
+                                    <p class="mt-2 text-gray-100">💰 Ish haqi: {{ ad.salary_min }} - {{ ad.salary_max }} {{ ad.currency }}</p>
+                                    <div class="mt-4 flex space-x-4">
+                                        <a href="{% url 'edit_job_ad' ad.id %}" class="px-3 py-1 bg-blue-500/30 text-blue-100 rounded hover:bg-blue-500/50">✏️ Tahrirlash</a>
+                                        <a href="{% url 'delete_job_ad' ad.id %}" class="px-3 py-1 bg-red-500/30 text-red-100 rounded hover:bg-red-500/50" onclick="return confirm('O‘chirishni tasdiqlaysizmi?')">🗑 O‘chirish</a>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-gray-200">Ish qidiruvchi e’lonlari yo‘q.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        {% empty %}
-            <p>Ish qidiruvchi e’lonlari yo‘q.</p>
-        {% endfor %}
+            {% else %}
+                <div class="bg-yellow-100 text-yellow-800 p-4 rounded">
+                    <p>Profilni ko‘rish uchun <a href="{% url 'login' %}" class="underline text-blue-800 font-semibold">kiring</a>.</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
-{% else %}
-    <p class="text-red-600">Profilni ko‘rish uchun <a href="{% url 'login' %}" class="text-blue-600 hover:underline">kiring</a>.</p>
-{% endif %}
+</div>
 {% endblock %}

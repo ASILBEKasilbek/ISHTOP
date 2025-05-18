@@ -4,7 +4,7 @@
 }
 .navbar a:hover {
     transform: scale(1.1);
-    color: #10B981;
+    color: #050606;
 }
 .card {
     transition: transform 0.2s;

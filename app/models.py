@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 
 class EmployerAd(models.Model):
     CATEGORY_CHOICES = [
-        ('worker', 'Ishchi'),
-        ('programmer', 'Dasturchi'),
-        ('doctor', 'Shifokor'),
-        ('teacher', 'O‘qituvchi'),
-        ('other', 'Boshqa'),
+        ('Kunlik ishchilar', 'Kunlik ishchilar'),
+        ('Yukchilar', 'Yukchilar'),
+        ('Santexniklar', 'Santexniklar'),
+        ('Ustalar', 'Ustalar'),
+        ('Apparatchilar', 'Apparatchilar'),
     ]
     CURRENCY_CHOICES = [
         ('UZS', 'UZS'),
